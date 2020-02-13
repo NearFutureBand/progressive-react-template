@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import './index.css'
 
-function App () {
+import { syncAction, asyncAction } from 'store/actions'
+
+import './style.css'
+
+const App = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(syncAction())
+    dispatch(asyncAction({ param1: 1, param2: 2 }))
+  }, [dispatch])
+
   return (
     <div className="App">
       <header className="App-header">
