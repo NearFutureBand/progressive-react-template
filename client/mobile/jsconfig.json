@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@actions": [
+        "./src/actions"
+      ],
+      "@api/*": [
+        "./src/api/*"
+      ],
+      "@common/*": [
+        "./src/common/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@consts/*": [
+        "./src/consts/*"
+      ],
+      "@helpers/*": [
+        "./src/helpers/*"
+      ],
+      "@navigation/*": [
+        "./src/navigation/*"
+      ],
+      "@reducers/*": [
+        "./src/reducers/*"
+      ],
+      "@redux/*": [
+        "./src/redux/*"
+      ],
+      "@screens/*": [
+        "./src/screens/*"
+      ],
+      "@saga/*": [
+        "./src/saga/*"
+      ],
+      "@selectors/*": [
+        "./src/selectors/*"
+      ]
+    }
+  }
+}
