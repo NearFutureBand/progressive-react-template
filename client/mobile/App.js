@@ -10,17 +10,20 @@ import {ApolloProvider} from '@apollo/react-hooks';
 import apolloClient from './src/configureApollo';
 
 // Navigation
-/*import {setNavigator} from '@navigation/navigationService';
-import AppNavigator from '@navigation/index';*/
+import {NavigationContainer} from '@react-navigation/native';
+/*import {setNavigator} from '@navigation/navigationService';*/
+import AppNavigator from '@navigation/index';
 
 const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
-      <Provider store={reduxStore}>
-        <SafeAreaView style={styles.container}>
-          {/*<AppNavigator ref={setNavigator} />*/}
-        </SafeAreaView>
-      </Provider>
+      <NavigationContainer>
+        <Provider store={reduxStore}>
+          <SafeAreaView style={styles.container}>
+            <AppNavigator /*ref={setNavigator}*/ />
+          </SafeAreaView>
+        </Provider>
+      </NavigationContainer>
     </ApolloProvider>
   );
 };
