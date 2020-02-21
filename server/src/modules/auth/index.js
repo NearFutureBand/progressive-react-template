@@ -1,6 +1,8 @@
 const Router = require('koa-router');
 const router = new Router();
 
+const { generateSmsCode } = require('../../helpers');
+
 const { handleError, makeJWT, validateJWT } = require('../../helpers');
 const {
   getUserByPhone,
@@ -9,24 +11,32 @@ const {
   createUser,
 } = require('../../queries');
 
+const smsFlow = async (phone) => {
+  const smsCode = generateSmsCode();
+  console.log('smsCode: ', smsCode); // send sms to user
+  await setVeryfingCodeToUser({ phone, code: smsCode });
+}
+
 router.post('/auth/is-user-signed-in', async (ctx) => {
   try {
     const { phone, token } = ctx.request.body;
     const [user] = await getUserByPhone(phone);
-    const isTokenValid = validateJWT(token, user.phone);
-    if (!user || !isTokenValid) {
-      ctx.status = 422;
-      if (!user) {
-        ctx.message = `User doesn't exist`;
-        await createUser(phone);
-      }
-      if (!isTokenValid) ctx.message = 'Token is wrong or expired';
 
-      const smsCode = '1q2q3';
-      await setVeryfingCodeToUser({ phone, code: smsCode });
-      console.log('smsCode: ', smsCode); // send sms to user
+    if (!user) {
+      ctx.status = 422;
+      ctx.message = `User doesn't exist`;
+      await createUser(phone);
+      await smsFlow(phone);
       return;
-      // create user and send smsCode
+    }
+
+    const isTokenValid = token ? validateJWT(token, user.phone) : false;
+
+    if (!isTokenValid) {
+      ctx.status = 422;
+      ctx.message = 'Token is wrong or expired';
+      await smsFlow(phone);
+      return;
     }
 
     ctx.body = {

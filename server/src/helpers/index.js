@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const jsonwebtoken = require('jsonwebtoken');
+const phoneToken = require('generate-sms-verification-code')
 const { SERVER_SECRET } = require('../secrets');
 
 const groupBy = (array, groupByField, grouppedFieldName, staticFields) => {
@@ -31,10 +32,12 @@ const validateJWT = (token, userPhone) => {
   return makeJWT({ phone: userPhone }) === token;
 }
 
+const generateSmsCode = () => phoneToken(5, { type: 'number' });
 
 module.exports = {
   groupBy,
   handleError,
   makeJWT,
   validateJWT,
+  generateSmsCode,
 };
