@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 
-import {TextField} from '@components/index';
+import {TextField, Button} from '@components/index';
 
 import styles from './style';
 
@@ -16,6 +16,7 @@ const Registration = () => {
         label="Mobile phone number"
         keyboardType="phone-pad"
       />
+      <Button label="submit" />
     </View>
   );
 };
