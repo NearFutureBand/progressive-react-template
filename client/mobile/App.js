@@ -2,8 +2,9 @@ import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 // Redux store
+import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
-import reduxStore from './src/configureStore';
+import {store, persistor} from './src/configureStore';
 
 // Apollo
 import {ApolloProvider} from '@apollo/react-hooks';
@@ -18,10 +19,12 @@ const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <NavigationContainer>
-        <Provider store={reduxStore}>
-          <SafeAreaView style={styles.container}>
-            <AppNavigator /*ref={setNavigator}*/ />
-          </SafeAreaView>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <SafeAreaView style={styles.container}>
+              <AppNavigator /*ref={setNavigator}*/ />
+            </SafeAreaView>
+          </PersistGate>
         </Provider>
       </NavigationContainer>
     </ApolloProvider>

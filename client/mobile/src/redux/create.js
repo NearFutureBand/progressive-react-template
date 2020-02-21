@@ -1,4 +1,3 @@
-// THIS VERSION IS ADAPTED TO WORK WITH GRAPHQL
 import axiosInstance from '../configureAxios';
 import apolloClient from '../configureApollo';
 
