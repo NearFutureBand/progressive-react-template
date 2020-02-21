@@ -1,6 +1,6 @@
 import {gql} from 'apollo-boost';
 
-import createPieceOfState from './create';
+import createPieceOfState, {requestTypes} from './create';
 const [createAction, createReducer] = createPieceOfState();
 
 const defaultState = {
@@ -12,6 +12,18 @@ export const syncAction = createAction({
   onStart: (state, action) => ({
     ...state,
     reducerProp: 1,
+  }),
+});
+
+export const asyncAction = createAction({
+  type: 'ASYNC_ACTION',
+  onFailure: (state, action) => ({
+    ...state,
+    reducerProp: 2,
+  }),
+  requestType: requestTypes.REQUEST,
+  requestConfig: params => ({
+    method: 'get',
   }),
 });
 
