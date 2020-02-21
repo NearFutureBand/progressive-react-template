@@ -1,22 +1,27 @@
 // THIS VERSION IS ADAPTED TO WORK WITH GRAPHQL
-
+import axiosInstance from '../configureAxios';
 import apolloClient from '../configureApollo';
 
 const successType = type => `${type}_SUCCESS`;
 const startType = type => `${type}_START`;
 const failureType = type => `${type}_FAILURE`;
 
-const makeRequest = (type, queryType, payload, requestConfig) => {
+const makeRequest = (type, requestType, payload, requestConfig) => {
   return async dispatch => {
     const {onSuccessCallback, onFailureCallback} = payload || {};
     dispatch({type: startType(type), payload});
 
     try {
-      const response = await apolloClient[
-        queryType === 'mutation' ? 'mutate' : queryType
-      ]({
-        [queryType]: requestConfig(payload),
-      });
+      let response;
+      if (requestType === requestTypes.REQUEST) {
+        response = await axiosInstance.request(requestConfig(payload));
+      } else {
+        response = await apolloClient[
+          requestType === requestTypes.GRAPHQL_MUTATION ? 'mutate' : requestType
+        ]({
+          [requestType]: requestConfig(payload),
+        });
+      }
       console.log(payload, response);
       dispatch({
         type: successType(type),
@@ -45,16 +50,16 @@ const makeRequest = (type, queryType, payload, requestConfig) => {
 const createAction = ({
   reducerMap,
   type,
-  queryType,
+  requestType,
   onStart = state => ({...state}),
   onSuccess = state => ({...state}),
   onFailure = state => ({...state}),
   requestConfig,
 }) => {
-  const actionCreator = requestConfig
-    ? payload => makeRequest(type, queryType, payload, requestConfig)
+  const actionCreator = requestType
+    ? payload => makeRequest(type, requestType, payload, requestConfig)
     : payload => ({type, payload});
-  if (requestConfig) {
+  if (requestType) {
     reducerMap[startType(type)] = onStart;
     reducerMap[successType(type)] = onSuccess;
     reducerMap[failureType(type)] = onFailure;
@@ -78,6 +83,12 @@ const createPieceOfState = () => {
     args => createAction({reducerMap, ...args}),
     defaultState => createReducer(defaultState, reducerMap),
   ];
+};
+
+export const requestTypes = {
+  GRAPHQL_QUERY: 'query',
+  GRAPHQL_MUTATION: 'mutation',
+  REQUEST: 'request',
 };
 
 export default createPieceOfState;
